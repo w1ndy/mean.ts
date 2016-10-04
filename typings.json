@@ -1,6 +1,8 @@
 {
   "globalDependencies": {
-    "node": "registry:dt/node#6.0.0+20160928143418"
+    "compression": "registry:dt/compression#0.0.0+20160501162003",
+    "node": "registry:dt/node#6.0.0+20160928143418",
+    "serve-favicon": "registry:dt/serve-favicon#0.0.0+20160316155526"
   },
   "dependencies": {
     "chalk": "registry:npm/chalk#1.1.1+20160812215109",

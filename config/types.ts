@@ -32,6 +32,30 @@ export interface ApplicationConfiguration {
     keywords?: string;
 }
 
+export interface DatabaseOptionsConfiguration {
+    user?: string;
+    pass?: string;
+}
+
+export interface DatabaseConfiguration {
+    uri?: string;
+    options?: DatabaseOptionsConfiguration;
+    debug?: boolean;
+}
+
+export interface FileLoggerConfiguration {
+    directoryPath?: string;
+    fileName?: string;
+    maxsize?: number;
+    maxFiles?: number;
+    json?: boolean;
+}
+
+export interface LogConfiguration {
+    format?: string;
+    fileLogger?: FileLoggerConfiguration;
+}
+
 export interface SessionCookieConfiguration {
     maxAge?: number;
     httpOnly?: boolean;
@@ -54,6 +78,8 @@ export interface SecureConfiguration {
 
 export interface Configuration {
     app?: ApplicationConfiguration;
+    db?: DatabaseConfiguration;
+    log?: LogConfiguration;
 
     host?: string;
     port?: number;
@@ -70,4 +96,6 @@ export interface Configuration {
 
     logo?: string;
     favicon?: string;
+
+    livereload?: boolean;
 }

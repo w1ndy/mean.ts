@@ -31,3 +31,5 @@ const defaultConfiguration: Configuration = {
     logo: 'modules/core/client/img/brand/logo.png',
     favicon: 'modules/core/client/img/brand/favicon.ico'
 };
+
+export = defaultConfiguration;

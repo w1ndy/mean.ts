@@ -1,0 +1,19 @@
+{
+  "name": "mean.ts",
+  "version": "1.0.0",
+  "description": "Minimal Full-Stack TypeScript Using MongoDB, Express, AngularJS 2, and Node.js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w1ndy/mean.ts.git"
+  },
+  "author": "w1ndy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/w1ndy/mean.ts/issues"
+  },
+  "homepage": "https://github.com/w1ndy/mean.ts#readme"
+}

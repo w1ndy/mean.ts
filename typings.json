@@ -1,0 +1,11 @@
+{
+  "globalDependencies": {
+    "node": "registry:dt/node#6.0.0+20160928143418"
+  },
+  "dependencies": {
+    "chalk": "registry:npm/chalk#1.1.1+20160812215109",
+    "express": "registry:npm/express#4.14.0+20160925001530",
+    "glob": "registry:npm/glob#6.0.0+20160723033700",
+    "lodash": "registry:npm/lodash#4.0.0+20160723033700"
+  }
+}

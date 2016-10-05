@@ -16,10 +16,10 @@ const defaultAssets: Assets = {
             'modules/*/client/css/*.css'
         ],
         js: [
-            'modules/core/client/app/config.js',
-            'modules/core/client/app/init.js',
-            'modules/*/client/*.js',
-            'modules/*/client/**/*.js'
+            'modules/core/client/app/config.ts',
+            'modules/core/client/app/init.ts',
+            'modules/*/client/*.ts',
+            'modules/*/client/**/*.ts'
         ],
         img: [
             'modules/**/*/img/**/*.jpg',
@@ -34,10 +34,10 @@ const defaultAssets: Assets = {
     server: {
         gruntConfig: ['gruntfile.js'],
         gulpConfig: ['gulpfile.js'],
-        allJS: ['server.js', 'config/**/*.js', 'modules/*/server/**/*.js'],
-        models: 'modules/*/server/models/**/*.js',
-        routes: ['modules/!(core)/server/routes/**/*.js', 'modules/core/server/routes/**/*.js'],
-        config: ['modules/*/server/config/*.js'],
+        allJS: ['server.js', 'config/**/*.ts', 'modules/*/server/**/*.ts'],
+        models: 'modules/*/server/models/**/*.ts',
+        routes: ['modules/!(core)/server/routes/**/*.ts', 'modules/core/server/routes/**/*.ts'],
+        config: ['modules/*/server/config/*.ts'],
         views: ['modules/*/server/views/*.html']
     }
 };

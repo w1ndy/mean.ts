@@ -17,12 +17,14 @@ import localConfig = require('./env/local');
 
 export class FrameworkConfiguration {
     assets: Assets;
+    folders: string[];
     config: Configuration;
 
     public getGlobbedPaths(
             globPatterns: string[] | string,
             excludes?: string): string[] {
         const urlRegex: RegExp = new RegExp('^(?:[a-z]+:)?\/\/', 'i');
+        const tsRegex: RegExp = new RegExp('\.ts$', 'i');
 
         let output: string[];
 
@@ -31,6 +33,9 @@ export class FrameworkConfiguration {
             for (let pat of globPatterns)
                 output = _.union(output, this.getGlobbedPaths(pat, excludes));
         } else {
+            if (tsRegex.test(globPatterns))
+                globPatterns = 'dist/' + globPatterns.slice(0, -2) + 'js';
+
             if (urlRegex.test(globPatterns)) {
                 output = [globPatterns];
             } else {
@@ -70,6 +75,10 @@ export class FrameworkConfiguration {
             default:
                 return developmentConfig;
         }
+    }
+
+    private _initGlobalConfigFolders(): void {
+        this.folders = this.getGlobbedPaths('modules/*/client/');
     }
 
     private _initGlobalConfigFiles(assets: Assets): void {
@@ -133,6 +142,7 @@ export class FrameworkConfiguration {
 
         let assets: Assets = _.merge(defaultAssets, environmentAssets);
         this._initGlobalConfigFiles(assets);
+        this._initGlobalConfigFolders();
 
         this.config = _.merge(defaultConfig, environmentConfig, localConfig);
 

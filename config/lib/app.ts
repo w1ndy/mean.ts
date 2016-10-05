@@ -33,4 +33,23 @@ export class Application {
             });
         });
     }
+
+    private static _instance: Application = null;
+
+    public static run(): void {
+        if (this._instance) {
+            console.error('Application already running!');
+        } else {
+            this._instance = new Application();
+        }
+    }
+
+    public static get(): Application {
+        if (!this._instance) {
+            console.error('Application is not running.');
+            return null;
+        } else {
+            return this._instance;
+        }
+    }
 }

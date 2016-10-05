@@ -22,6 +22,15 @@
     <!--Application JavaScript Files-->
     {{#each jsFiles}}<script type="text/javascript" src="{{this}}"></script>{{/each}}
 
+    {{#if systemConfig}}
+    <script>
+        (function () {
+            System.config({{{systemConfig}}});
+            System.import('core').catch(err => console.log(err));
+        }());
+    </script>
+    {{/if}}
+
     {{#if livereload}}
     <!--Livereload script rendered -->
     <script type="text/javascript" src="{{host}}:35729/livereload.js"></script>

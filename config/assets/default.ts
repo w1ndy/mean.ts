@@ -7,7 +7,7 @@ const defaultAssets: Assets = {
                 'npm:': 'node_modules/'
             },
             map: {
-                app: 'dist',
+                core: 'modules/core/client/',
 
                 '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
                 '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
@@ -19,8 +19,8 @@ const defaultAssets: Assets = {
                 'rxjs': 'npm:rxjs',
             },
             packages: {
-                app: {
-                    main: './modules/client/core/init.js',
+                core: {
+                    main: './config/init.js',
                     defaultExtension: 'js'
                 },
                 rxjs: {
@@ -28,7 +28,12 @@ const defaultAssets: Assets = {
                 }
             }
         },
-        js: [],
+        js: [
+            'public/node_modules/core-js/client/shim.min.js',
+            'public/node_modules/zone.js/dist/zone.js',
+            'public/node_modules/reflect-metadata/Reflect.js',
+            'public/node_modules/systemjs/dist/system.src.js'
+        ],
         css: [
             'modules/*/client/css/*.css'
         ],

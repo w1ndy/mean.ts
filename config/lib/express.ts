@@ -42,6 +42,8 @@ export class ExpressAdapter {
         this.app.locals.favicon = fc.config.favicon;
         this.app.locals.env = process.env.NODE_ENV as string;
         this.app.locals.domain = fc.config.domain;
+        this.app.locals.systemConfig =
+            JSON.stringify(fc.assets.client.systemjs);
 
         this.app.use((
                 req: express.Request,
@@ -133,16 +135,17 @@ export class ExpressAdapter {
     private _initModulesClientRoutes(): void {
         this.app.use('/', express.static(path.resolve('./public')));
         for (let p of fc.folders) {
-            let jsRegex: RegExp = new RegExp('\.js$', 'i'),
+            let jsRegex: RegExp = new RegExp('\.(js|map)$', 'i'),
                 jsProvider: express.RequestHandler =
                     express.static(path.resolve('./dist/', p)),
                 assetProvider: express.RequestHandler =
                     express.static(path.resolve('.', p));
-
+            if (!p.startsWith('/'))
+                p = '/' + p;
             this.app.use(p, (
                     req: express.Request,
                     res: express.Response,
-                    next: express.NextFunction): void => {
+                    next: express.NextFunction) => {
                 if (jsRegex.test(req.originalUrl))
                     jsProvider(req, res, next);
                 else

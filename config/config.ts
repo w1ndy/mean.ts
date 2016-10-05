@@ -91,6 +91,7 @@ export class FrameworkConfiguration {
         this.assets.server.config =
             this.getGlobbedPaths(assets.server.config);
 
+        this.assets.client.systemjs = assets.client.systemjs;
         this.assets.client.js =
             this.getGlobbedPaths(assets.client.js, 'public/');
         this.assets.client.css =

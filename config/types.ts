@@ -8,15 +8,16 @@ export interface ServerAssets {
     views?: string[] | string;
 }
 
-export interface LibraryAssets {
-    js?: string[] | string;
-    css?: string[] | string;
+export interface SystemJSOptions {
+    paths?: {};
+    map?: {};
+    packages?: {};
 }
 
 export interface ClientAssets {
+    systemjs?: SystemJSOptions;
     js?: string[] | string;
     css?: string[] | string;
-    lib?: LibraryAssets;
     img?: string[] | string;
     views?: string[] | string;
 }

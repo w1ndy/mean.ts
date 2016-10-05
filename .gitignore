@@ -4,3 +4,5 @@ typings/*
 node_modules/
 config/env/local.ts
 *.log
+public/node_modules/
+public/etc/

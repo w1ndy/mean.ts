@@ -92,11 +92,9 @@ export class FrameworkConfiguration {
             this.getGlobbedPaths(assets.server.config);
 
         this.assets.client.js =
-            this.getGlobbedPaths(assets.client.lib.js, 'public/')
-            .concat(this.getGlobbedPaths(assets.client.js, 'public/'));
+            this.getGlobbedPaths(assets.client.js, 'public/');
         this.assets.client.css =
-            this.getGlobbedPaths(assets.client.lib.css, 'public/')
-            .concat(this.getGlobbedPaths(assets.client.css, 'public/'));
+            this.getGlobbedPaths(assets.client.css, 'public/');
     }
 
     private _validateDomainIsSet(): void {

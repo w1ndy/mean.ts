@@ -12,9 +12,11 @@ import mongoConnector = require('connect-mongo');
 import mongoose = require('mongoose');
 import lusca = require('lusca');
 import helmet = require('helmet');
+import morgan = require('morgan');
 import _ = require('lodash');
 
 import { FrameworkConfiguration } from '../config';
+import { Logger } from './logger';
 
 const fc: FrameworkConfiguration = FrameworkConfiguration.get();
 const MongoStoreFactory: mongoConnector.MongoStoreFactory =
@@ -63,7 +65,9 @@ export class ExpressAdapter {
         this.app.use(favicon(this.app.locals.favicon));
 
         if (_.has(fc.config, 'log.format')) {
-            // TODO: use morgan
+            let logger = new Logger();
+            this.app.use(
+                morgan(logger.getLogFormat(), logger.getMorganOptions()));
         }
 
         if (process.env.NODE_ENV as string === 'development') {

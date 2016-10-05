@@ -3,3 +3,4 @@ typings/*
 !typings/declarations.d.ts
 node_modules/
 config/env/local.ts
+*.log

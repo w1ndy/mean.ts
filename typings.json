@@ -10,7 +10,8 @@
     "mongodb": "registry:dt/mongodb#2.1.0+20160602142941",
     "morgan": "registry:dt/morgan#1.7.0+20160524142355",
     "node": "registry:dt/node#6.0.0+20160928143418",
-    "serve-favicon": "registry:dt/serve-favicon#0.0.0+20160316155526"
+    "serve-favicon": "registry:dt/serve-favicon#0.0.0+20160316155526",
+    "winston": "registry:dt/winston#0.0.0+20160417152829"
   },
   "dependencies": {
     "chalk": "registry:npm/chalk#1.1.1+20160812215109",

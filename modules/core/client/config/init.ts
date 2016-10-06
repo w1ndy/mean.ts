@@ -1,1 +1,1 @@
-console.log('hello!');
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';

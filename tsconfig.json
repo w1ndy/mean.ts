@@ -10,11 +10,13 @@
         "experimentalDecorators": true,
         "removeComments": false,
         "noImplicitAny": true,
-        "suppressImplicitAnyIndexErrors": true
+        "suppressImplicitAnyIndexErrors": true,
+        "pretty": true
     },
-    "exclude": [
-        "dist",
-        "node_modules",
-        "public/node_modules"
+    "include": [
+        "typings/**/*",
+        "node_modules/@angular/**/*",
+        "config/**/*",
+        "modules/**/*"
     ]
 }

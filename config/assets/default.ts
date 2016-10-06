@@ -20,7 +20,7 @@ const defaultAssets: Assets = {
             },
             packages: {
                 core: {
-                    main: './config/init.js',
+                    main: './app/init.js',
                     defaultExtension: 'js'
                 },
                 rxjs: {

@@ -70,45 +70,13 @@ gulp.task('bundleRxJS', () => {
 });
 
 gulp.task('bundle', () => {
-    let tasks = [];
-    // for (const pkg in defaultAssets.client.systemjs.packages) {
-    //     if (!_.has(defaultAssets.client.systemjs.packages, `${pkg}.bundleAs`))
-    //         continue;
-
-    //     let url = defaultAssets.client.systemjs.packages[pkg].main,
-    //         target = defaultAssets.client.systemjs.packages[pkg].bundleAs;
-    //     if (_.has(defaultAssets.client.systemjs.map, pkg)) {
-    //         url = path.join(defaultAssets.client.systemjs.map[pkg], url);
-    //         target = path.join(defaultAssets.client.systemjs.map[pkg], target);
-    //     }
-
-    //     url = path.join('dist/', url);
-    //     target = path.join('dist/', target);
-
-    //     console.log(url, target);
-    //     tasks.push(bundler.build(url).pipe(gulp.dest(target)));
-    // }
-    let buildTargets = '[modules/core/client/**/*.js]';
-    // buildTargets = '[../public/node_modules/rxjs/**/*.js]';
-    // return bundler.bundle(buildTargets)
-    //     .pipe(minifier({}, uglifyjs))
-    //     .pipe(plugins.rename('rxjs.min.js'))
-    //     .pipe(gulp.dest('./public/'));
-    return moduleBundler.bundle(buildTargets)
-        .pipe(minifier({}, uglifyjs))
-        .pipe(plugins.rename('core.min.js'))
-        .pipe(gulp.dest('./public/bundles/'));
-    // const getFolders = (dir) => {
-    //     return fs.readdirSync(dir)
-    //         .filter(f => fs.statSync(path.join(dir, f)).isDirectory());
-    // };
-    // const tasks = getFolders(JS_MODULES_DIR).map(folder => {
-    //     return gulp.src(path.join(JS_MODULES_DIR, folder, 'client/**/*.js'))
-    //         .pipe(plugins.concat(`main.js`))
-    //         .pipe(minifier({}, uglifyjs))
-    //         .pipe(plugins.rename(`main.min.js`))
-    //         .pipe(gulp.dest(path.join(JS_MODULES_DIR, folder)));
-    // });
+    const tasks = glob.sync('modules/*/').map(path => {
+        const moduleName = path.match(/\/(.+)\//)[1];
+        return moduleBundler.bundle(`[${path}client/**/*.js]`)
+            .pipe(minifier({}, uglifyjs))
+            .pipe(plugins.rename(`${moduleName}.min.js`))
+            .pipe(gulp.dest('./public/bundles/'));
+    });
     return merge(tasks);
 });
 

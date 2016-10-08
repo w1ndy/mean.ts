@@ -6,3 +6,4 @@ config/env/local.ts
 *.log
 public/node_modules/
 public/etc/
+public/bundles/

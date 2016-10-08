@@ -22,7 +22,7 @@ export class FrameworkConfiguration {
 
     public getGlobbedPaths(
             globPatterns: string[] | string,
-            excludes?: string): string[] {
+            excludes?: string[] | string): string[] {
         const urlRegex: RegExp = new RegExp('^(?:[a-z]+:)?\/\/', 'i');
         const tsRegex: RegExp = new RegExp('\.ts$', 'i');
 
@@ -40,8 +40,15 @@ export class FrameworkConfiguration {
                 output = [globPatterns];
             } else {
                 output = glob.sync(globPatterns);
-                if (excludes)
+                if (excludes instanceof Array) {
+                    output = output.map(f => {
+                        for (const e of excludes)
+                            f = f.replace(e, '');
+                        return f;
+                    });
+                } else {
                     output = output.map(f => f.replace(excludes, ''));
+                }
             }
         }
 
@@ -82,7 +89,7 @@ export class FrameworkConfiguration {
     }
 
     private _initGlobalConfigFiles(assets: Assets): void {
-        this.assets = { server: {}, client: {} };
+        this.assets = { server: {}, client: { lib: {} } };
 
         this.assets.server.models =
             this.getGlobbedPaths(assets.server.models);
@@ -92,10 +99,14 @@ export class FrameworkConfiguration {
             this.getGlobbedPaths(assets.server.config);
 
         this.assets.client.systemjs = assets.client.systemjs;
-        this.assets.client.js =
-            this.getGlobbedPaths(assets.client.js, 'public/');
-        this.assets.client.css =
-            this.getGlobbedPaths(assets.client.css, 'public/');
+        this.assets.client.bundles =
+            this.getGlobbedPaths(assets.client.bundles,
+                ['dist/', 'public/']);
+        this.assets.client.lib.js =
+            this.getGlobbedPaths(assets.client.lib.js, 'public/');
+        this.assets.client.css = _.union(
+            this.getGlobbedPaths(assets.client.lib.css, 'public/'),
+            this.getGlobbedPaths(assets.client.css));
     }
 
     private _validateDomainIsSet(): void {

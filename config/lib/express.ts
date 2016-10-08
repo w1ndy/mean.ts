@@ -35,7 +35,7 @@ export class ExpressAdapter {
         if (fc.config.secure && fc.config.secure.ssl)
             this.app.locals.secure = true;
         this.app.locals.keywords = fc.config.app.keywords;
-        this.app.locals.jsFiles = fc.assets.client.js;
+        this.app.locals.jsFiles = fc.assets.client.lib.js;
         this.app.locals.cssFiles = fc.assets.client.css;
         this.app.locals.livereload = fc.config.livereload;
         this.app.locals.logo = fc.config.logo;
@@ -44,6 +44,12 @@ export class ExpressAdapter {
         this.app.locals.domain = fc.config.domain;
         this.app.locals.systemConfig =
             JSON.stringify(fc.assets.client.systemjs);
+
+        this.app.locals.production = false;
+        if (process.env.NODE_ENV as string === 'production') {
+            this.app.locals.production = true;
+            this.app.locals.bundleFiles = fc.assets.client.bundles;
+        }
 
         this.app.use((
                 req: express.Request,
@@ -133,24 +139,31 @@ export class ExpressAdapter {
     }
 
     private _initModulesClientRoutes(): void {
+        const jsRegex: RegExp = new RegExp('\.(js|map)$', 'i');
         this.app.use('/', express.static(path.resolve('./public')));
         for (let p of fc.folders) {
-            let jsRegex: RegExp = new RegExp('\.(js|map)$', 'i'),
-                jsProvider: express.RequestHandler =
-                    express.static(path.resolve('./dist/', p)),
-                assetProvider: express.RequestHandler =
+            const assetProvider: express.RequestHandler =
                     express.static(path.resolve('.', p));
-            if (!p.startsWith('/'))
-                p = '/' + p;
-            this.app.use(p, (
-                    req: express.Request,
-                    res: express.Response,
-                    next: express.NextFunction) => {
-                if (jsRegex.test(req.originalUrl))
-                    jsProvider(req, res, next);
-                else
-                    assetProvider(req, res, next);
-            });
+            if (process.env.NODE_ENV as string === 'production') {
+                this.app.get(`/${p}bundle.min.js`, (
+                        req: express.Request,
+                        res: express.Response): void => {
+                    res.sendFile(path.resolve('./dist/', p, 'bundle.min.js'));
+                });
+                this.app.use(`/${p}`, assetProvider);
+            } else {
+                const jsProvider: express.RequestHandler =
+                        express.static(path.resolve('./dist/', p));
+                this.app.use(`/${p}`, (
+                        req: express.Request,
+                        res: express.Response,
+                        next: express.NextFunction): void => {
+                    if (jsRegex.test(req.originalUrl))
+                        jsProvider(req, res, next);
+                    else
+                        assetProvider(req, res, next);
+                });
+            }
         }
     }
 

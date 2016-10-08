@@ -14,3 +14,5 @@ declare module 'lusca' {
     function lusca(options?: {}): createRouter.HandlerArgument;
     export = lusca;
 }
+
+declare const PRODUCTION: boolean;

@@ -4,7 +4,7 @@ export interface ServerAssets {
     config?: string[] | string;
     gruntConfig?: string[] | string;
     gulpConfig?: string[] | string;
-    allJS?: string[] | string;
+    sources?: string[] | string;
     views?: string[] | string;
 }
 
@@ -14,9 +14,16 @@ export interface SystemJSOptions {
     packages?: {};
 }
 
+export interface LibraryAssets {
+    js?: string[] | string;
+    css?: string[] | string;
+}
+
 export interface ClientAssets {
     systemjs?: SystemJSOptions;
-    js?: string[] | string;
+    lib?: LibraryAssets;
+    bundles?: string[] | string;
+    ts?: string[] | string;
     css?: string[] | string;
     img?: string[] | string;
     views?: string[] | string;

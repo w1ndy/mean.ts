@@ -14,13 +14,17 @@
 
     <!-- Application CSS Files -->
     {{#each cssFiles}}<link rel="stylesheet" href="{{this}}">{{/each}}
-</head>
+
+    <!-- Production Flag -->
+    <script>const PRODUCTION = {{production}};</script>
 
 <body class="ng-cloak">
     {{{block "content"}}}
 
     <!--Application JavaScript Files-->
     {{#each jsFiles}}<script type="text/javascript" src="{{this}}"></script>{{/each}}
+
+    {{#each bundleFiles}}<script type="text/javascript" src="{{this}}"></script>{{/each}}
 
     {{#if systemConfig}}
     <script>

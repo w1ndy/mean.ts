@@ -28,15 +28,19 @@ const defaultAssets: Assets = {
                 }
             }
         },
-        js: [
-            'public/node_modules/core-js/client/shim.min.js',
-            'public/node_modules/zone.js/dist/zone.js',
-            'public/node_modules/reflect-metadata/Reflect.js',
-            'public/node_modules/systemjs/dist/system.src.js'
-        ],
-        css: [
-            'modules/*/client/css/*.css'
-        ],
+        lib: {
+            js: [
+                'public/node_modules/core-js/client/shim.min.js',
+                'public/node_modules/zone.js/dist/zone.js',
+                'public/node_modules/reflect-metadata/Reflect.js',
+                'public/node_modules/systemjs/dist/system.src.js'
+            ],
+            css: []
+        },
+        bundles: 'public/bundles/*.js',
+        ts: 'modules/*/client/**/*.ts',
+        // No module CSS is loaded by default. Specify styleUrls in angular modules to load stylesheets on the fly.
+        css: [],
         img: [
             'modules/**/*/img/**/*.jpg',
             'modules/**/*/img/**/*.png',
@@ -50,7 +54,7 @@ const defaultAssets: Assets = {
     server: {
         gruntConfig: ['gruntfile.js'],
         gulpConfig: ['gulpfile.js'],
-        allJS: ['server.js', 'config/**/*.ts', 'modules/*/server/**/*.ts'],
+        sources: ['server.js', 'config/**/*.ts', 'modules/*/server/**/*.ts'],
         models: 'modules/*/server/models/**/*.ts',
         routes: ['modules/!(core)/server/routes/**/*.ts', 'modules/core/server/routes/**/*.ts'],
         config: ['modules/*/server/config/*.ts'],

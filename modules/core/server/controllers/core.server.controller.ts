@@ -2,7 +2,9 @@ import express = require('express');
 
 export class CoreController {
     renderIndex(req: express.Request, res: express.Response): void {
-        res.render('modules/core/server/views/index');
+        res.render('modules/core/server/views/index', {
+            serverAddress: req.hostname
+        });
     }
 
     renderServerError(req: express.Request, res: express.Response): void {

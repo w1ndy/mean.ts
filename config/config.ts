@@ -145,8 +145,6 @@ export class FrameworkConfiguration {
     }
 
     private constructor() {
-        console.log('initializing FrameworkConfiguration...');
-
         const environmentAssets: Assets = this._getEnvironmentAssets();
         const environmentConfig: Configuration = this._getEnvironmentConfig();
 

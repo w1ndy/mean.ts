@@ -38,6 +38,8 @@
     "gulp-csso": "^2.0.0",
     "gulp-livereload": "^3.8.1",
     "gulp-load-plugins": "^1.3.0",
+    "gulp-node-inspector": "^0.1.0",
+    "gulp-nodemon": "^2.2.1",
     "gulp-rename": "^1.2.2",
     "gulp-systemjs-builder": "^0.15.0",
     "gulp-typescript": "^3.0.2",

@@ -33,19 +33,67 @@ const JS_MODULES_DIR = 'dist/modules/';
 gulp.task('env:dev', () => process.env.NODE_ENV = 'development');
 gulp.task('env:prod', () => process.env.NODE_ENV = 'production');
 
+const launchNodeMonitor = function (debug) {
+    let sources = _.union(
+            defaultAssets.server.views,
+            defaultAssets.server.sources,
+            defaultAssets.server.config);
+    sources = sources.map(src => {
+        if (/\.ts$/.test(src)) {
+            return path.join('dist/', src).slice(0, -2) + 'js';
+        } else {
+            return src;
+        }
+    });
+    return plugins.nodemon({
+        script: 'server.js',
+        nodeArgs: debug ? ['--debug'] : [],
+        ext: 'js,html',
+        verbose: debug,
+        watch: sources
+    });
+}
+
+gulp.task('nodemon', () => launchNodeMonitor(false));
+gulp.task('nodemon-debug', () => launchNodeMonitor(true));
+
+gulp.task('node-inspector', function() {
+    return gulp.src([])
+        .pipe(plugins.nodeInspector({
+            debugPort: 5858,
+            webHost: '0.0.0.0',
+            webPort: 1337,
+            saveLiveEdit: false,
+            preload: true,
+            inject: true,
+            hidden: [],
+            stackTraceLimit: 50,
+            sslKey: '',
+            sslCert: ''
+        }));
+});
+
 gulp.task('watch', () => {
-    plugins.livereload.listen();
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    if (!isProduction)
+        plugins.livereload.listen();
 
     const watches = [
         gulp.watch(defaultAssets.server.views),
-        gulp.watch(defaultAssets.server.sources),
-        gulp.watch(defaultAssets.client.ts),
-        gulp.watch(defaultAssets.client.css),
-        gulp.watch(defaultAssets.client.views)
+        gulp.watch(defaultAssets.server.sources, ['compile']),
+        gulp.watch(defaultAssets.client.ts,
+            [isProduction ? 'build' : 'compile']),
+        gulp.watch(defaultAssets.client.css,
+            isProduction ? ['build'] : undefined),
+        gulp.watch(defaultAssets.client.views,
+            isProduction ? ['build'] : undefined)
     ];
 
-    for (let w of watches)
-        w.on('change', plugins.livereload.changed);
+    if (!isProduction) {
+        for (let w of watches)
+            w.on('change', plugins.livereload.changed);
+    }
 });
 
 const moduleBundler = (function () {
@@ -145,10 +193,14 @@ gulp.task('build', (done) => {
     runSequence('compile', ['bundleRxJS', 'bundle'], done);
 });
 
+gulp.task('debug', (done) => {
+    runSequence('env:dev', ['compile', 'copyLocalEnvConfig'], ['node-inspector', 'nodemon-debug', 'watch'], done);
+});
+
 gulp.task('default', (done) => {
-    runSequence('env:dev', ['compile', 'copyLocalEnvConfig'], done);
+    runSequence('env:dev', ['compile', 'copyLocalEnvConfig'], ['nodemon', 'watch'], done);
 });
 
 gulp.task('prod', (done) => {
-    runSequence('env:prod', ['build', 'copyLocalEnvConfig'], done);
+    runSequence('env:prod', ['build', 'copyLocalEnvConfig'], ['nodemon', 'watch'], done);
 });

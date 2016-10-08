@@ -54,9 +54,17 @@ const defaultAssets: Assets = {
     server: {
         gruntConfig: ['gruntfile.js'],
         gulpConfig: ['gulpfile.js'],
-        sources: ['server.js', 'config/**/*.ts', 'modules/*/server/**/*.ts'],
+        sources: [
+            'server.js',
+            'config/**/*.ts',
+            'modules/*/server/**/*.ts',
+            'public/bundles/**/*.js'
+        ],
         models: 'modules/*/server/models/**/*.ts',
-        routes: ['modules/!(core)/server/routes/**/*.ts', 'modules/core/server/routes/**/*.ts'],
+        routes: [
+            'modules/!(core)/server/routes/**/*.ts',
+            'modules/core/server/routes/**/*.ts'
+        ],
         config: ['modules/*/server/config/*.ts'],
         views: ['modules/*/server/views/*.html']
     }

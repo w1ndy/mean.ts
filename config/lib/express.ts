@@ -145,11 +145,6 @@ export class ExpressAdapter {
             const assetProvider: express.RequestHandler =
                     express.static(path.resolve('.', p));
             if (process.env.NODE_ENV as string === 'production') {
-                this.app.get(`/${p}bundle.min.js`, (
-                        req: express.Request,
-                        res: express.Response): void => {
-                    res.sendFile(path.resolve('./dist/', p, 'bundle.min.js'));
-                });
                 this.app.use(`/${p}`, assetProvider);
             } else {
                 const jsProvider: express.RequestHandler =

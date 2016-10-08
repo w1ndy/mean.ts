@@ -23,6 +23,9 @@ const gulp = require('gulp'),
       runSequence = require('run-sequence'),
       SystemJSBuilder = require('systemjs-builder'),
       glob = require('glob'),
+      es = require('event-stream'),
+      csso = require('csso'),
+      Buffer = require('buffer').Buffer,
       _ = require('lodash');
 
 const JS_MODULES_DIR = 'dist/modules/';
@@ -88,10 +91,51 @@ gulp.task('copyLocalEnvConfig', () => {
         .pipe(gulp.dest('config/env'));
 });
 
-const tsProject = plugins.typescript.createProject('tsconfig.json');
-
 gulp.task('compile', () => {
+    const tsProject = plugins.typescript.createProject('tsconfig.json'),
+          transformer = process.env.NODE_ENV !== 'production'
+            ? plugins.util.noop() : es.map((data, callback) => {
+                let source = data.contents.toString('utf8'),
+                    modified = false;
+                const templateUrl = source.match(/templateUrl\s*:\s*(["'])(.*)\1/);
+                if (templateUrl) {
+                    const templatePath = path.join(
+                        path.dirname(data.path), templateUrl[2]);
+                    if (!fs.existsSync(templatePath)) {
+                        plugins.util.log(plugins.util.colors.red(`Warning: cannot locate template ${templatePath}`))
+                    } else {
+                        const template = fs.readFileSync(templatePath, 'utf8');
+                        source = source.replace(templateUrl[0],
+                            'template:' + JSON.stringify(template));
+                        modified = true;
+                    }
+                }
+                const styleUrls = source.match(/styleUrls\s*:\s*\[(.*)\]/);
+                if (styleUrls) {
+                    const replaceTarget = styleUrls[0],
+                          urls = styleUrls[1].split(',').map(
+                                    p => p.trim().slice(1, -1));
+                    let cached = [], uncached = [];
+                    for (let url of urls) {
+                        const absUrl = path.join(path.dirname(data.path), url);
+                        if (!fs.existsSync(absUrl)) {
+                            plugins.util.log(plugins.util.colors.red(`Warning: cannot locate stylesheet ${absUrl}`));
+                            uncached.push(`'${url}'`);
+                        } else {
+                            const style = fs.readFileSync(absUrl, 'utf8');
+                            cached.push(JSON.stringify(
+                                csso.minify(style).css));
+                        }
+                    }
+                    source = source.replace(replaceTarget, `styles:[${cached.join(',')}],styleUrls:[${uncached.join(',')}]`);
+                    modified = true;
+                }
+                if (modified)
+                    data.contents = Buffer.from(source);
+                callback(null, data);
+            });
     return tsProject.src()
+        .pipe(transformer)
         .pipe(tsProject())
         .js
         .pipe(gulp.dest('dist'));
@@ -106,5 +150,5 @@ gulp.task('default', (done) => {
 });
 
 gulp.task('prod', (done) => {
-    runSequence('env:prod', ['copyLocalEnvConfig', 'build'], done);
+    runSequence('env:prod', ['build', 'copyLocalEnvConfig'], done);
 });

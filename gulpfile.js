@@ -194,13 +194,13 @@ gulp.task('build', (done) => {
 });
 
 gulp.task('debug', (done) => {
-    runSequence('env:dev', ['compile', 'copyLocalEnvConfig'], ['node-inspector', 'nodemon-debug', 'watch'], done);
+    runSequence('env:dev', 'copyLocalEnvConfig', 'compile', ['node-inspector', 'nodemon-debug', 'watch'], done);
 });
 
 gulp.task('default', (done) => {
-    runSequence('env:dev', ['compile', 'copyLocalEnvConfig'], ['nodemon', 'watch'], done);
+    runSequence('env:dev', 'copyLocalEnvConfig', 'compile', ['nodemon', 'watch'], done);
 });
 
 gulp.task('prod', (done) => {
-    runSequence('env:prod', ['build', 'copyLocalEnvConfig'], ['nodemon', 'watch'], done);
+    runSequence('env:prod', 'copyLocalEnvConfig', 'build', ['nodemon', 'watch'], done);
 });

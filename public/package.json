@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "ln -srf node_modules/* ../node_modules/"
+    "postinstall": "ln -sr node_modules/* ../node_modules/ || true"
   },
   "repository": {
     "type": "git",

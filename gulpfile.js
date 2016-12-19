@@ -107,7 +107,10 @@ gulp.task('bundleRxJS', () => {
 gulp.task('bundle', () => {
     const tasks = glob.sync('modules/*/').map(path => {
         const moduleName = path.match(/\/(.+)\//)[1];
-        return moduleBundler.bundle(`[${path}client/**/*.js]`)
+        return moduleBundler.bundle(`[${path}client/**/*.js]`, {
+                sourceMaps: true,
+                sourceMapContents: true
+            })
             //.pipe(minifier({}, uglifyjs))
             .pipe(plugins.rename(`${moduleName}.min.js`))
             .pipe(gulp.dest('./public/bundles/'));
@@ -171,9 +174,16 @@ gulp.task('compile', () => {
                 callback(null, data);
             });
     return tsProject.src()
+        .pipe(plugins.sourcemaps.init())
         .pipe(transformer)
         .pipe(tsProject())
         .js
+        .pipe(plugins.sourcemaps.write('dist', {
+            sourceMappingURL: function (file) {
+                console.dir(file);
+                return file.sourceMap.file + '.map';
+            }
+        }))
         .pipe(gulp.dest('dist'));
 });
 

@@ -180,7 +180,6 @@ gulp.task('compile', () => {
         .js
         .pipe(plugins.sourcemaps.write('dist', {
             sourceMappingURL: function (file) {
-                console.dir(file);
                 return file.sourceMap.file + '.map';
             }
         }))

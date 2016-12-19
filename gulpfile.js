@@ -18,6 +18,8 @@ const gulp = require('gulp'),
       defaultAssets = require('./dist/config/assets/default'),
       path = require('path'),
       merge = require('merge-stream'),
+      uglifyjs = require('uglify-js'),
+      minifier = require('gulp-uglify/minifier'),
       runSequence = require('run-sequence'),
       SystemJSBuilder = require('systemjs-builder'),
       glob = require('glob'),
@@ -96,7 +98,8 @@ gulp.task('bundleRxJS', () => {
         rxjsBundleConfig.meta[bundle] = { build: false };
     rxjsBundler.config(rxjsBundleConfig);
 
-    return rxjsBundler.bundle('[node_modules/rxjs/**/*.js]', { minify: true })
+    return rxjsBundler.bundle('[node_modules/rxjs/**/*.js]')
+        //.pipe(minifier({}, uglifyjs))
         .pipe(plugins.rename('rx.min.js'))
         .pipe(gulp.dest('./public/bundles/'));
 });
@@ -104,7 +107,8 @@ gulp.task('bundleRxJS', () => {
 gulp.task('bundle', () => {
     const tasks = glob.sync('modules/*/').map(path => {
         const moduleName = path.match(/\/(.+)\//)[1];
-        return moduleBundler.bundle(`[${path}client/**/*.js]`, { minify: true })
+        return moduleBundler.bundle(`[${path}client/**/*.js]`)
+            //.pipe(minifier({}, uglifyjs))
             .pipe(plugins.rename(`${moduleName}.min.js`))
             .pipe(gulp.dest('./public/bundles/'));
     });
@@ -123,6 +127,9 @@ gulp.task('compile', () => {
     const tsProject = plugins.typescript.createProject('tsconfig.json'),
           transformer = process.env.NODE_ENV !== 'production'
             ? plugins.util.noop() : es.map((data, callback) => {
+                if (data.path.match('node_modules'))
+                    return callback(null, data);
+
                 let source = data.contents.toString('utf8'),
                     modified = false;
                 const templateUrl = source.match(/templateUrl\s*:\s*(["'])(.*)\1/);
@@ -130,7 +137,7 @@ gulp.task('compile', () => {
                     const templatePath = path.join(
                         path.dirname(data.path), templateUrl[2]);
                     if (!fs.existsSync(templatePath)) {
-                        plugins.util.log(plugins.util.colors.red(`Warning: cannot locate template ${templatePath}`))
+                        plugins.util.log(plugins.util.colors.red(`Warning: cannot locate template ${templatePath}`));
                     } else {
                         const template = fs.readFileSync(templatePath, 'utf8');
                         source = source.replace(templateUrl[0],
@@ -158,8 +165,9 @@ gulp.task('compile', () => {
                     source = source.replace(replaceTarget, `styles:[${cached.join(',')}],styleUrls:[${uncached.join(',')}]`);
                     modified = true;
                 }
-                if (modified)
+                if (modified) {
                     data.contents = Buffer.from(source);
+                }
                 callback(null, data);
             });
     return tsProject.src()

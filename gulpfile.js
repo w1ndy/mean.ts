@@ -47,7 +47,7 @@ const launchNodeMonitor = function (debug) {
     });
     return plugins.nodemon({
         script: 'server.js',
-        nodeArgs: debug ? ['--debug'] : [],
+        nodeArgs: debug ? ['--debug --inspect'] : [],
         ext: 'js,html',
         verbose: debug,
         watch: sources
@@ -56,22 +56,6 @@ const launchNodeMonitor = function (debug) {
 
 gulp.task('nodemon', () => launchNodeMonitor(false));
 gulp.task('nodemon-debug', () => launchNodeMonitor(true));
-
-gulp.task('node-inspector', function() {
-    return gulp.src([])
-        .pipe(plugins.nodeInspector({
-            debugPort: 5858,
-            webHost: '0.0.0.0',
-            webPort: 1337,
-            saveLiveEdit: false,
-            preload: true,
-            inject: true,
-            hidden: [],
-            stackTraceLimit: 50,
-            sslKey: '',
-            sslCert: ''
-        }));
-});
 
 gulp.task('watch', () => {
     const isProduction = process.env.NODE_ENV === 'production';
@@ -194,7 +178,7 @@ gulp.task('build', (done) => {
 });
 
 gulp.task('debug', (done) => {
-    runSequence('env:dev', 'copyLocalEnvConfig', 'compile', ['node-inspector', 'nodemon-debug', 'watch'], done);
+    runSequence('env:dev', 'copyLocalEnvConfig', 'compile', ['nodemon-debug', 'watch'], done);
 });
 
 gulp.task('default', (done) => {

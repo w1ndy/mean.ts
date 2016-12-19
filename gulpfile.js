@@ -18,8 +18,6 @@ const gulp = require('gulp'),
       defaultAssets = require('./dist/config/assets/default'),
       path = require('path'),
       merge = require('merge-stream'),
-      uglifyjs = require('uglify-js'),
-      minifier = require('gulp-uglify/minifier'),
       runSequence = require('run-sequence'),
       SystemJSBuilder = require('systemjs-builder'),
       glob = require('glob'),
@@ -98,8 +96,7 @@ gulp.task('bundleRxJS', () => {
         rxjsBundleConfig.meta[bundle] = { build: false };
     rxjsBundler.config(rxjsBundleConfig);
 
-    return rxjsBundler.bundle('[node_modules/rxjs/**/*.js]')
-        .pipe(minifier({}, uglifyjs))
+    return rxjsBundler.bundle('[node_modules/rxjs/**/*.js]', { minify: true })
         .pipe(plugins.rename('rx.min.js'))
         .pipe(gulp.dest('./public/bundles/'));
 });
@@ -107,8 +104,7 @@ gulp.task('bundleRxJS', () => {
 gulp.task('bundle', () => {
     const tasks = glob.sync('modules/*/').map(path => {
         const moduleName = path.match(/\/(.+)\//)[1];
-        return moduleBundler.bundle(`[${path}client/**/*.js]`)
-            .pipe(minifier({}, uglifyjs))
+        return moduleBundler.bundle(`[${path}client/**/*.js]`, { minify: true })
             .pipe(plugins.rename(`${moduleName}.min.js`))
             .pipe(gulp.dest('./public/bundles/'));
     });

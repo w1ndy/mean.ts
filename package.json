@@ -73,7 +73,6 @@
     "serve-favicon": "^2.3.0",
     "systemjs-builder": "^0.15.32",
     "typescript": "^2.0.3",
-    "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
     "winston": "^2.2.0"
   }
 }

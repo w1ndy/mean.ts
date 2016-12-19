@@ -56,7 +56,7 @@ export class ExpressAdapter {
                 res: express.Response,
                 next: express.NextFunction) => {
             res.locals.host = `${req.protocol}://${req.hostname}`;
-            res.locals.url = `${req.protocol}://${req.headers.host}${req.originalUrl}`;
+            res.locals.url = `${req.protocol}://${req.headers['host']}${req.originalUrl}`;
             next();
         });
     }

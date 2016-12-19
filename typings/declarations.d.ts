@@ -10,8 +10,8 @@ export = hbs;
 }
 
 declare module 'lusca' {
-    import createRouter = require('~express/lib/router/index');
-    function lusca(options?: {}): createRouter.HandlerArgument;
+    import core = require('express-serve-static-core');
+    function lusca(options?: {}): core.RequestHandler;
     export = lusca;
 }
 
